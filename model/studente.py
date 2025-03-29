@@ -1,3 +1,12 @@
+import dataclasses
+
+
+@dataclasses.dataclass
 class Studente:
-    def __init__(self):
-        pass
+    matricola: int
+    nome: str
+    cognome: str
+    CDS: str
+
+    def __str__(self):
+        return f" {self.nome},  {self.cognome} ({self.matricola})"

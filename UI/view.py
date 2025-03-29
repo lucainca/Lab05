@@ -1,4 +1,11 @@
+from msilib.schema import ListView
+
 import flet as ft
+import model.corso
+import model.modello
+
+from UI.controller import Controller
+from model import modello
 
 
 class View(ft.UserControl):
@@ -21,7 +28,7 @@ class View(ft.UserControl):
     def load_interface(self):
         """Function that loads the graphical elements of the view"""
         # title
-        self._title = ft.Text("Hello World", color="blue", size=24)
+        self._title = ft.Text("App gestione Studenti", color="blue", size=24)
         self._page.controls.append(self._title)
 
         #ROW with some controls
@@ -32,11 +39,54 @@ class View(ft.UserControl):
             hint_text="Insert a your name"
         )
 
-        # button for the "hello" reply
-        self.btn_hello = ft.ElevatedButton(text="Hello", on_click=self._controller.handle_hello)
-        row1 = ft.Row([self.txt_name, self.btn_hello],
+
+
+        self._txtCorso = ft.Dropdown(label= "corso",
+                                     options = [ft.dropdown.Option(key=corso.codins, text= corso.__str__())
+                                                for corso in self._controller.getCorsi() ],
+                                     width=500 )
+
+        self._txtMatricola= ft.TextField(
+            label="Matricola",
+            width=200
+        )
+
+        self._txtNome= ft.TextField(
+            label="Nome",
+            read_only=True,
+            width=400
+        )
+
+        self._txtCognome= ft.TextField(
+            label="Cognome",
+            read_only=True,
+            width=400
+        )
+
+        self.btnCercaIscr = ft.ElevatedButton(text="Cerca iscritti", on_click=self._controller.handle_cercaIscritti)
+
+        self.btnCercaSt = ft.ElevatedButton(text="Cerca studente", on_click=self._controller.handle_cercaStudenti)
+
+        self.btnCercaC = ft.ElevatedButton(text="Cerca corsi", on_click=self._controller.handle_cercaCorsi )
+
+        self.btnIscrivi = ft.ElevatedButton(text="Iscrivi")
+
+        #self._lv= ListView(expand=True)
+
+        row1 = ft.Row([self._txtCorso, self.btnCercaIscr],
                       alignment=ft.MainAxisAlignment.CENTER)
+
+        row2= ft.Row([self._txtMatricola, self._txtNome,self._txtCognome],
+                     alignment=ft.MainAxisAlignment.CENTER)
+
+        row3= ft.Row([self.btnCercaSt, self.btnCercaC, self.btnIscrivi],alignment=ft.MainAxisAlignment.CENTER)
+
+       # row4= ft.Row(self._lv)
+
         self._page.controls.append(row1)
+        self._page.controls.append(row2)
+        self._page.controls.append(row3)
+       # self._page.controls.append(row4)
 
         # List View where the reply is printed
         self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
@@ -64,3 +114,9 @@ class View(ft.UserControl):
 
     def update_page(self):
         self._page.update()
+
+
+    #def fillDropDown(self):
+
+      #  for c in provaMod.getCorsi():
+
